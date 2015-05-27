@@ -1,0 +1,135 @@
+<head>
+<meta charset="utf-8">
+<script type="text/javascript">
+function change() {
+    var form = document.getElementById("f1").value;
+    var node = document.getElementById("f2");
+    node.value=form;
+}
+
+// id で全選択
+function textAreaIdSelect(id){
+	document.getElementById(id).focus();
+	document.getElementById(id).select();
+}
+
+// マルチバイトは2文字とカウント
+function jstrlen(str) {
+   len = 0;
+   str = escape(str);
+   for (i = 0; i < str.length; i++, len++) {
+      if (str.charAt(i) == "%") {
+         if (str.charAt(++i) == "u") {
+            i += 3;
+            len++;
+         }
+         i++;
+      }
+   }
+   return len;
+}
+
+// 右寄せで任意の文字で埋める
+function addright(val,char,n){
+ for(; jstrlen(val) < n; val+=char);
+ return val;
+}
+
+function purse( text ) {
+	var reg=/[,\t]/g;
+	var split=text.split(reg);
+	return split;
+}
+
+// 2次元配列の列方向で最大文字数をカウント（マルチバイトは2文字とカウント）
+function maxList(list){
+  var arg=list;
+  var result = new Array( arg[0].length) ;
+  for(var j = 0; j<arg[0].length; j++){
+    result[j]="0";
+    for(var i = 0; i<arg.length; i++){
+        if(jstrlen(arg[i][j]) > result[j]){
+            result[j] = jstrlen( arg[i][j] );
+        }
+    }
+  }
+  return result;
+}
+
+// テキストを改行区切りで1次元配列に入れる
+function cutReturnString(str){
+	str = str.replace( /\r\n/g , "\n" );				//IE対策 改行コード\r\nを\rに変換
+	str = str.replace( /^(\n+)|(\n+)$/g , "" );			//文頭と文末の余計な改行を除去
+	var list = str.split( /\n/g );					//改行で分割
+	return list;
+}
+
+// タブまたはカンマで分割し、2次元配列に入れる
+function cutCommaTabString(list){
+	var arr = list;
+	var data = [];
+	var reg = /[,\t]/g;
+	for( var i = 0 , l = arr.length ; i < l ; i++ ){
+		arr[i] = arr[i].replace( /^(\t+)/g , "" );		//文頭の余計なインデントを除去
+		data[i] = arr[i].split( reg );
+		for( var j = 0 , m = data[i].length ; j < m ; j++ ){	//trimも同時に行っておく
+			data[i][j] = data[i][j].replace( /(^\s+)|(\s+$)/g , ""  );
+		}
+	}
+	return data;
+}	
+
+// markdown形式でテーブル作成
+function makeMarkdownTable(table, maxlist){
+	var text="";
+	for(var i=0;i<table.length;i++){
+		text+="|";
+		if(i=="1"){
+			for(var k=0;k<table[0].length;k++){
+				text+=addright("","-",maxlist[k])+"|";
+			}
+		text+="\n|";
+		}
+		for(var j=0;j<table[0].length;j++){
+			text+=addright(table[i][j]," ",maxlist[j])+"|";
+		}
+	text+="\n";
+	}
+	return text;
+}
+
+function convert(){
+
+	// テキストエリアから、テキストを取得して改行区切りで1次元配列に入れる
+	var text="";
+	var str = document.getElementById("f1").value;
+	var arr = cutReturnString(str);
+	
+	// タブまたはカンマで分割し、2次元配列に入れる
+	var table = cutCommaTabString(arr);
+	
+	// 2次元配列の列方向で最大文字数をカウント（マルチバイトは2文字とカウント）
+	var maxlist = maxList(table);
+
+	// markdown形式でテーブル作成
+	var text=makeMarkdownTable(table, maxlist);
+
+	// 表示
+	var node = document.getElementById("f2");
+	node.value=text;
+
+	// focus
+	textAreaIdSelect("f2");
+}
+</script>
+<title>カンマ・タブ区切りテーブルをMarkdown形式に変換する</title>
+</head>
+<body>
+<p>カンマ・タブ区切りテーブルをMarkdown形式に変換する(セルの結合を行っていないexcelからのコピーも可)</p>
+<textarea id="f1" rows="20" cols="100" placeholder="カンマ・タブ区切りテーブルを入力してください" autofocus></textarea>
+<br>
+<input type="button" value="convert" onclick="convert();">
+<br>
+<textarea id="f2" rows="20" cols="100" placeholder="output"></textarea>
+
+</body>
