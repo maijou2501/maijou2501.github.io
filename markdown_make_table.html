@@ -51,7 +51,9 @@ function maxList(list){
         if(jstrlen(arg[i][j]) > result[j]){
             result[j] = jstrlen( arg[i][j] );
         }
-    }
+		}
+		// "GitHub Flavored Markdown" では、2列目のハイフンが各要素毎で最低3個必要
+	  if(result[j] < 3 ) result[j] = 3;
   }
   return result;
 }
