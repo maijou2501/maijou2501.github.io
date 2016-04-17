@@ -1,11 +1,11 @@
 <head>
-<meta charset="utf-8">
-<script type="text/javascript">
-function change() {
-    var form = document.getElementById("f1").value;
-    var node = document.getElementById("f2");
-    node.value=form;
-}
+	<meta charset="utf-8">
+	<script type="text/javascript">
+		function change() {
+			var form = document.getElementById("f1").value;
+			var node = document.getElementById("f2");
+			node.value=form;
+		}
 
 // id で全選択
 function textAreaIdSelect(id){
@@ -15,24 +15,24 @@ function textAreaIdSelect(id){
 
 // マルチバイトは2文字とカウント
 function jstrlen(str) {
-   len = 0;
-   str = escape(str);
-   for (i = 0; i < str.length; i++, len++) {
-      if (str.charAt(i) == "%") {
-         if (str.charAt(++i) == "u") {
-            i += 3;
-            len++;
-         }
-         i++;
-      }
-   }
-   return len;
+	len = 0;
+	str = escape(str);
+	for (i = 0; i < str.length; i++, len++) {
+		if (str.charAt(i) == "%") {
+			if (str.charAt(++i) == "u") {
+				i += 3;
+				len++;
+			}
+			i++;
+		}
+	}
+	return len;
 }
 
 // 右寄せで任意の文字で埋める
 function addright(val,char,n){
- for(; jstrlen(val) < n; val+=char);
- return val;
+	for(; jstrlen(val) < n; val+=char);
+	return val;
 }
 
 function purse( text ) {
@@ -43,19 +43,19 @@ function purse( text ) {
 
 // 2次元配列の列方向で最大文字数をカウント（マルチバイトは2文字とカウント）
 function maxList(list){
-  var arg=list;
-  var result = new Array( arg[0].length) ;
-  for(var j = 0; j<arg[0].length; j++){
-    result[j]="0";
-    for(var i = 0; i<arg.length; i++){
-        if(jstrlen(arg[i][j]) > result[j]){
-            result[j] = jstrlen( arg[i][j] );
-        }
+	var arg=list;
+	var result = new Array( arg[0].length) ;
+	for(var j = 0; j<arg[0].length; j++){
+		result[j]="0";
+		for(var i = 0; i<arg.length; i++){
+			if(jstrlen(arg[i][j]) > result[j]){
+				result[j] = jstrlen( arg[i][j] );
+			}
 		}
 		// "GitHub Flavored Markdown" では、2列目のハイフンが各要素毎で最低3個必要
-	  if(result[j] < 3 ) result[j] = 3;
-  }
-  return result;
+		if(result[j] < 3 ) result[j] = 3;
+	}
+	return result;
 }
 
 // テキストを改行区切りで1次元配列に入れる
@@ -90,12 +90,12 @@ function makeMarkdownTable(table, maxlist){
 			for(var k=0;k<table[0].length;k++){
 				text+=addright("","-",maxlist[k])+"|";
 			}
-		text+="\n|";
+			text+="\n|";
 		}
 		for(var j=0;j<table[0].length;j++){
 			text+=addright(table[i][j]," ",maxlist[j])+"|";
 		}
-	text+="\n";
+		text+="\n";
 	}
 	return text;
 }
@@ -106,10 +106,10 @@ function convert(){
 	var text="";
 	var str = document.getElementById("f1").value;
 	var arr = cutReturnString(str);
-	
+
 	// タブまたはカンマで分割し、2次元配列に入れる
 	var table = cutCommaTabString(arr);
-	
+
 	// 2次元配列の列方向で最大文字数をカウント（マルチバイトは2文字とカウント）
 	var maxlist = maxList(table);
 
@@ -127,11 +127,11 @@ function convert(){
 <title>カンマ・タブ区切りテーブルをMarkdown形式に変換する</title>
 </head>
 <body>
-<p>カンマ・タブ区切りテーブルをMarkdown形式に変換する(セルの結合を行っていないexcelからのコピーも可)</p>
-<textarea id="f1" rows="20" cols="100" placeholder="カンマ・タブ区切りテーブルを入力してください" autofocus></textarea>
-<br>
-<input type="button" value="convert" onclick="convert();">
-<br>
-<textarea id="f2" rows="20" cols="100" placeholder="output"></textarea>
+	<p>カンマ・タブ区切りテーブルをMarkdown形式に変換する(セルの結合を行っていないexcelからのコピーも可)</p>
+	<textarea id="f1" rows="20" cols="100" placeholder="カンマ・タブ区切りテーブルを入力してください" autofocus></textarea>
+	<br>
+	<input type="button" value="convert" onclick="convert();">
+	<br>
+	<textarea id="f2" rows="20" cols="100" placeholder="output"></textarea>
 
 </body>
